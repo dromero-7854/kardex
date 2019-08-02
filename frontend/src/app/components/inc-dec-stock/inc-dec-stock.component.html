@@ -1,0 +1,23 @@
+<div class="modal-body">
+  <div class="d-flex flex-column justify-content-center" [formGroup]="incDecForm">
+    <!-- NgbModal: remove default auto focus -->
+    <input type="text" style="display:none" />
+    <!-- -->
+    <div class="title">
+      <span>{{ title }}</span>
+    </div>
+    <div class="stock-field mb-2">
+      <mat-form-field>
+        <input matInput type="number" placeholder="{{ placeholder }}" name="incDecValue" formControlName="incDecValue"
+          [errorStateMatcher]="matcher">
+        <mat-hint class="help" *ngIf="submitted && incDecValue.hasError('required')">
+          Requerido
+        </mat-hint>
+      </mat-form-field>
+    </div>
+    <div class="d-flex justify-content-center toolbar">
+      <button mat-raised-button type="button" (click)="execute()">Aceptar</button>
+      <button mat-button type="button" class="ml-2" (click)="activeModal.close('Close click')">Cancelar</button>
+    </div>
+  </div>
+</div>

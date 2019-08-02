@@ -1,0 +1,37 @@
+<div class="modal-body">
+  <div class="d-flex flex-column justify-content-center" [formGroup]="productForm">
+    <!-- NgbModal: remove default auto focus -->
+    <input type="text" style="display:none" />
+    <!-- -->
+    <div class="code-field mb-2">
+      <mat-form-field>
+        <input matInput name="code" formControlName="code" placeholder="Código" [errorStateMatcher]="matcher">
+        <mat-hint class="help" *ngIf="submitted && code.hasError('required')">
+          Requerido
+        </mat-hint>
+      </mat-form-field>
+    </div>
+    <div class="description-field mb-2">
+      <mat-form-field>
+        <input matInput name="description" formControlName="description" placeholder="Descripción"
+          [errorStateMatcher]="matcher">
+        <mat-hint class="help" *ngIf="submitted && description.hasError('required')">
+          Requerido
+        </mat-hint>
+      </mat-form-field>
+    </div>
+    <div class="stock-field mb-2">
+      <mat-form-field>
+        <input matInput type="number" placeholder="Stock" name="stock" formControlName="stock"
+          [errorStateMatcher]="matcher">
+        <mat-hint class="help" *ngIf="submitted && stock.hasError('required')">
+          Requerido
+        </mat-hint>
+      </mat-form-field>
+    </div>
+    <div class="d-flex justify-content-center toolbar">
+      <button mat-raised-button type="button" (click)="save()">Guardar</button>
+      <button mat-button type="button" class="ml-2" (click)="activeModal.close('Close click')">Cancelar</button>
+    </div>
+  </div>
+</div>

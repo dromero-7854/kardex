@@ -1,0 +1,13 @@
+<div class="content d-flex align-items-center">
+  <div class="icon">
+    <i class="material-icons">
+      {{ data.icon }}
+    </i>
+  </div>
+  <div class="message flex-grow-1">
+    <span>{{ data.message }}</span>
+  </div>
+</div>
+<div *ngIf="data.showCloseButton" class="actions d-flex align-items-center flex-row-reverse">
+  <button mat-button (click)="onDismiss()">Cerrar</button>
+</div>

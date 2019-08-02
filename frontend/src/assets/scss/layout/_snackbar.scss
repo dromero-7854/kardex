@@ -1,0 +1,21 @@
+@import '../abstract/variables';
+
+.snackbar-success {
+  background-color: $k-yellow;
+  color: $k-blue-grey;
+}
+
+.snackbar-info {
+  background-color: $k-yellow;
+  color: $k-blue-grey;
+}
+
+.snackbar-error {
+  background-color: $error;
+  color: $white;
+}
+
+.snackbar-warning {
+  background-color: $k-yellow;
+  color: $k-blue-grey;
+}
