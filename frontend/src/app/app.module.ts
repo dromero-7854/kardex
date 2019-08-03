@@ -12,6 +12,7 @@ import { MatButtonModule, MatTableModule, MatInputModule, MatSortModule, MatPagi
 
 import { ProductCrudComponent } from './components/product-crud/product-crud.component';
 import { SnackbarsComponent } from './components/snackbars/snackbars.component';
+import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 import { IncDecStockComponent } from './components/inc-dec-stock/inc-dec-stock.component';
 
 @NgModule({
@@ -19,6 +20,7 @@ import { IncDecStockComponent } from './components/inc-dec-stock/inc-dec-stock.c
     AppComponent,
     ProductCrudComponent,
     SnackbarsComponent,
+    ConfirmationDialogComponent,
     IncDecStockComponent
   ],
   imports: [
@@ -37,6 +39,6 @@ import { IncDecStockComponent } from './components/inc-dec-stock/inc-dec-stock.c
   ],
   providers: [],
   bootstrap: [AppComponent],
-  entryComponents: [ProductCrudComponent, IncDecStockComponent, SnackbarsComponent]
+  entryComponents: [ProductCrudComponent, IncDecStockComponent, SnackbarsComponent, ConfirmationDialogComponent]
 })
 export class AppModule { }

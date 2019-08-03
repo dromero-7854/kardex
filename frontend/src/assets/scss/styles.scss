@@ -11,3 +11,12 @@
 @import '../../../node_modules/bootstrap/scss/bootstrap';
 
 @import "./layout/snackbar";
+
+.k-mat-btn.mat-button,
+.k-mat-btn.mat-raised-button,
+.k-mat-btn.mat-flat-button,
+.k-mat-btn.mat-fab,
+.k-btn.mat-mini-fab {
+  background-color: $button-bkg-color;
+  color: $button-color;
+}

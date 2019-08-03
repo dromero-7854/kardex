@@ -1,0 +1,25 @@
+<div class="modal-header">
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <div class="container">
+    <div class="row">
+      <div class="content d-flex align-items-center">
+        <div class="icon">
+          <i class="material-icons">delete</i>
+        </div>
+        <div class="message flex-grow-1">
+          <span>¿Desear eliminar el producto?</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <div class="d-flex justify-content-end">
+    <button mat-raised-button class="k-mat-btn accept-btn" (click)="accept()">Aceptar</button>
+    <button mat-button (click)="decline()">Cancelar</button>
+  </div>
+</div>

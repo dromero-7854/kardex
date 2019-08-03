@@ -7,7 +7,7 @@
         </mat-form-field>
       </div>
       <div class="add-btn">
-        <button mat-raised-button (click)="add()"><span>Agregar producto</span></button>
+        <button mat-raised-button class="k-mat-btn" (click)="add()"><span>Agregar producto</span></button>
       </div>
     </div>
     <div class="kardex-table">
@@ -33,7 +33,7 @@
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Acciones </th>
             <td mat-cell *matCellDef="let product">
               <div class="d-flex align-items-center">
-                <div class="action-btn mat-elevation-z2 rd-btn" (click)="decrease(product)">
+                <div [ngClass]="{ 'action-btn mat-elevation-z2 rd-btn': product.stock > 0, 'action-btn-disabled': product.stock <= 0 }" (click)="decrease(product)">
                   <i class="material-icons">remove_circle_outline</i>
                 </div>
                 <div class="action-btn ml-2 mat-elevation-z2 rd-btn" (click)="increase(product)">

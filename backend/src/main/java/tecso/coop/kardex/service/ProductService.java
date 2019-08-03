@@ -1,7 +1,6 @@
 package tecso.coop.kardex.service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -11,8 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import tecso.coop.kardex.domain.Product;
+import tecso.coop.kardex.error.DuplicatedProductCodeException;
+import tecso.coop.kardex.error.ProductNotFoundException;
 import tecso.coop.kardex.repository.ProductRepository;
-import tecso.coop.kardex.service.dto.ProductDTO;
 
 @Service
 @Transactional
@@ -24,44 +24,36 @@ public class ProductService {
 	private ProductRepository productRepository;
 
 	@Transactional(readOnly = false)
-	public Product createProduct(ProductDTO productDTO) {
-		Product product = new Product();
-		product.setCode(productDTO.getCode());
-		product.setDescription(productDTO.getDescription());
-		product.setStock(productDTO.getStock());
-
+	public Product createProduct(Product product) {
+		if (productRepository.findByCodeOrderById(product.getCode()).size() > 0) {
+			throw new DuplicatedProductCodeException(product.getCode());
+		}
+		product.setId(null);
 		productRepository.save(product);
-
 		log.debug("Created Information for Product: {}", product);
-
 		return product;
 	}
-	
+
 	@Transactional(readOnly = false)
-	public Product updateProduct(ProductDTO productDTO) {
-		Product product = new Product();
-		product.setId(productDTO.getId());
-		product.setCode(productDTO.getCode());
-		product.setDescription(productDTO.getDescription());
-		product.setStock(productDTO.getStock());
-
-		productRepository.save(product);
-
+	public Product updateProduct(Product product) {
+		if (product.getId() == null)
+			throw new ProductNotFoundException(product.getId());
+		Product dbProduct = productRepository.findById(product.getId())
+				.orElseThrow(() -> new ProductNotFoundException(product.getId()));
+		if (productRepository.findByCodeOrderById(product.getCode()).stream()
+				.filter(prod -> prod.getId() != product.getId()).collect(Collectors.toList()).size() > 0)
+			throw new DuplicatedProductCodeException(product.getCode());
+		dbProduct.setCode(product.getCode());
+		dbProduct.setDescription(product.getDescription());
+		dbProduct.setStock(product.getStock());
+		productRepository.save(dbProduct);
 		log.debug("Created Information for Product: {}", product);
-
 		return product;
 	}
 
 	@Transactional(readOnly = true)
-	public List<ProductDTO> getAllProducts() {
-		return productRepository.findAll().stream().map(product -> {
-			ProductDTO productDTO = new ProductDTO();
-			productDTO.setId(product.getId());
-			productDTO.setCode(product.getCode());
-			productDTO.setDescription(product.getDescription());
-			productDTO.setStock(product.getStock());
-			return productDTO;
-		}).collect(Collectors.toList());
+	public List<Product> getAllProducts() {
+		return productRepository.findAll().stream().collect(Collectors.toList());
 	}
 
 	@Transactional(readOnly = false)
@@ -74,26 +66,20 @@ public class ProductService {
 
 	@Transactional(readOnly = false)
 	public Product increaseStock(Long productId, Integer value) {
-		Optional<Product> existingProduct = productRepository.findById(productId);
-		Product product = null;
-		if (existingProduct.isPresent()) {
-			product = existingProduct.get();  
-			product.setStock(product.getStock() + value);
-			productRepository.save(product);
-		}
-		return product;
+		Product dbProduct = productRepository.findById(productId)
+				.orElseThrow(() -> new ProductNotFoundException(productId));
+		dbProduct.setStock(dbProduct.getStock() + value);
+		productRepository.save(dbProduct);
+		return dbProduct;
 	}
-	
+
 	@Transactional(readOnly = false)
 	public Product decreaseStock(Long productId, Integer value) {
-		Optional<Product> existingProduct = productRepository.findById(productId);
-		Product product = null;
-		if (existingProduct.isPresent()) {
-			product = existingProduct.get();  
-			product.setStock((product.getStock() >= value) ? product.getStock() - value : 0);
-			productRepository.save(product);
-		}
-		return product;
+		Product dbProduct = productRepository.findById(productId)
+				.orElseThrow(() -> new ProductNotFoundException(productId));
+		dbProduct.setStock((dbProduct.getStock() >= value) ? dbProduct.getStock() - value : 0);
+		productRepository.save(dbProduct);
+		return dbProduct;
 	}
 
 }

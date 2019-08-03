@@ -1,0 +1,30 @@
+@import '../../../assets/scss/abstract/variables';
+
+.modal-header {
+  padding: 5px 10px 0 0;
+  background-color: $k-yellow;
+  height: 25px;
+  border-bottom: none;
+}
+
+.modal-body {
+  padding: 5px 15px 15px 15px;
+  background-color: $k-yellow;
+  text-align: left;
+}
+
+.modal-footer {
+  border: none;
+}
+
+.icon {
+  margin-right: 15px;
+}
+
+.message {
+  font-size: 14px;
+}
+
+.accept-btn {
+  margin-right: 10px;
+}

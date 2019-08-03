@@ -18,6 +18,15 @@
   cursor: pointer;
 }
 
+.action-btn-disabled {
+  height: 35px;
+  padding: 5px;
+  background-color: #e9ecef;
+  color: #6c757d;
+  border-radius: 4px;
+  pointer-events: none;
+}
+
 .rd-btn:active {
   -ms-transform: translateY(4px);
   -webkit-transform: translateY(4px);

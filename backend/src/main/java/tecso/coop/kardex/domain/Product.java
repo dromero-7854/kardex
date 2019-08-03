@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -29,19 +30,20 @@ public class Product implements Serializable {
 	private Long id;
 
 	@NotNull
+	@NotEmpty(message = "Por favor, ingresar un código de producto")
 	@Size(max = 10)
 	@Column(length = 10)
 	private String code;
 
 	@NotNull
+	@NotEmpty(message = "Por favor, ingresar una descripción")
 	@Size(max = 50)
 	@Column(length = 50)
 	private String description;
 
-	@NotNull
+	@NotNull(message = "Por favor, ingresar un stock")
 	@Column(name = "stock")
 	private Long stock;
-
 
 	public Long getId() {
 		return id;
@@ -77,8 +79,10 @@ public class Product implements Serializable {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
 		Product product = (Product) o;
 		return Objects.equals(code, product.code);
 	}
@@ -90,12 +94,8 @@ public class Product implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Product{" +
-				"id=" + id +
-				", code='" + code + '\'' +
-				", description='" + description + '\'' +
-				", stock=" + stock +
-				'}';
+		return "Product{" + "id=" + id + ", code='" + code + '\'' + ", description='" + description + '\'' + ", stock="
+				+ stock + '}';
 	}
 
 }

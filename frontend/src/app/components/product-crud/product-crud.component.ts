@@ -35,7 +35,7 @@ export class ProductCrudComponent implements OnInit {
       id: [this.product.id],
       code: [this.product.code, [Validators.required]],
       description: [this.product.description, [Validators.required]],
-      stock: [this.product.stock, [Validators.required]]
+      stock: [this.product.stock, [Validators.required, Validators.min(0)]]
     });
   }
 

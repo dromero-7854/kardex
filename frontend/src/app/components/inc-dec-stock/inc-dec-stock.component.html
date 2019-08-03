@@ -8,15 +8,18 @@
     </div>
     <div class="stock-field mb-2">
       <mat-form-field>
-        <input matInput type="number" placeholder="{{ placeholder }}" name="incDecValue" formControlName="incDecValue"
+        <input matInput type="number" placeholder="{{ placeholder }}" name="incDecValue" formControlName="incDecValue" min="1"
           [errorStateMatcher]="matcher">
         <mat-hint class="help" *ngIf="submitted && incDecValue.hasError('required')">
           Requerido
         </mat-hint>
+        <mat-hint class="help" *ngIf="submitted && incDecValue.hasError('min')">
+          El valor debe ser mayor a 0 
+        </mat-hint>
       </mat-form-field>
     </div>
     <div class="d-flex justify-content-center toolbar">
-      <button mat-raised-button type="button" (click)="execute()">Aceptar</button>
+      <button mat-raised-button class="k-mat-btn" type="button" (click)="execute()">Aceptar</button>
       <button mat-button type="button" class="ml-2" (click)="activeModal.close('Close click')">Cancelar</button>
     </div>
   </div>

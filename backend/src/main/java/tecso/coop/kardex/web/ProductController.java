@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import tecso.coop.kardex.domain.Product;
 import tecso.coop.kardex.service.ProductService;
-import tecso.coop.kardex.service.dto.ProductDTO;
 
 @RestController
 @CrossOrigin
@@ -36,17 +35,15 @@ public class ProductController {
 	private ProductService productService;
 
 	@PostMapping("/products")
-	public ResponseEntity<Product> create(@Valid @RequestBody ProductDTO productDTO) throws URISyntaxException {
-		log.debug("REST request to save Product : {}", productDTO);
-
-		Product newProduct = productService.createProduct(productDTO);
-		return ResponseEntity.created(new URI("/kardex-api/products/" + newProduct.getId()))
-				.body(newProduct);
+	public ResponseEntity<Product> create(@Valid @RequestBody Product product) throws URISyntaxException {
+		log.debug("REST request to save Product : {}", product);
+		Product newProduct = productService.createProduct(product);
+		return ResponseEntity.created(new URI("/kardex-api/products/" + newProduct.getId())).body(newProduct);
 	}
 
 	@GetMapping("/products")
-	public ResponseEntity<List<ProductDTO>> getAllProducts() {
-		List<ProductDTO> products = productService.getAllProducts();
+	public ResponseEntity<List<Product>> getAllProducts() {
+		List<Product> products = productService.getAllProducts();
 		return new ResponseEntity<>(products, HttpStatus.OK);
 	}
 
@@ -55,26 +52,25 @@ public class ProductController {
 		productService.deleteProduct(productId);
 		return ResponseEntity.ok().build();
 	}
-	
-	@PutMapping("/products") 
-	public ResponseEntity<Product> update(@Valid @RequestBody ProductDTO productDTO) throws URISyntaxException {
-		Product newProduct = productService.updateProduct(productDTO);
-		return ResponseEntity.created(new URI("/kardex-api/products/" + newProduct.getId()))
-				.body(newProduct);
+
+	@PutMapping("/products")
+	public ResponseEntity<Product> update(@Valid @RequestBody Product product) throws URISyntaxException {
+		Product updatedProduct = productService.updateProduct(product);
+		return ResponseEntity.accepted().body(updatedProduct);
 	}
 
-	@PutMapping("/products/{productId}/increase/{value}") 
-	public ResponseEntity<Product> increaseStock(@PathVariable Long productId, @PathVariable Integer value) throws URISyntaxException {
+	@PutMapping("/products/{productId}/increase/{value}")
+	public ResponseEntity<Product> increaseStock(@PathVariable Long productId, @PathVariable Integer value)
+			throws URISyntaxException {
 		Product product = productService.increaseStock(productId, value);
-		return ResponseEntity.created(new URI("/kardex-api/products/" + product.getId()))
-				.body(product);
+		return ResponseEntity.accepted().body(product);
 	}
-	
-	@PutMapping("/products/{productId}/decrease/{value}") 
-	public ResponseEntity<Product> decreaseStock(@PathVariable Long productId, @PathVariable Integer value) throws URISyntaxException {
+
+	@PutMapping("/products/{productId}/decrease/{value}")
+	public ResponseEntity<Product> decreaseStock(@PathVariable Long productId, @PathVariable Integer value)
+			throws URISyntaxException {
 		Product product = productService.decreaseStock(productId, value);
-		return ResponseEntity.created(new URI("/kardex-api/products/" + product.getId()))
-				.body(product);
+		return ResponseEntity.accepted().body(product);
 	}
 
 }

@@ -13,6 +13,7 @@ import { ProductCrudComponent } from './components/product-crud/product-crud.com
 import { IncDecStockComponent } from './components/inc-dec-stock/inc-dec-stock.component';
 // service
 import { SnackbarService } from './services/snackbar.service';
+import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 
 const products = [
   {
@@ -66,7 +67,7 @@ export class AppComponent implements OnInit {
   }
 
   add() {
-    const modalRef = this.modalService.open(ProductCrudComponent, { backdrop: 'static', centered:true });
+    const modalRef = this.modalService.open(ProductCrudComponent, { backdrop: 'static', centered: true });
     let subs: Subscription = modalRef.componentInstance.passEntry.subscribe((newProduct: Product) => {
       this.http.post<Product>(env.baseUrl + '/products', newProduct, {
         headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -75,14 +76,15 @@ export class AppComponent implements OnInit {
         this.snackbarService.openSuccesMessage('Producto agregado con éxito.');
         this.dataSource.data.push(resp.body);
         this.dataSource._updateChangeSubscription();
-      })
+      },
+        error => this.snackbarService.openErrorMessage(error.error.message + ' (status code: ' + error.status + ')'));
       subs.unsubscribe();
       modalRef.close();
     })
   }
 
   update(product: Product) {
-    const modalRef = this.modalService.open(ProductCrudComponent, { backdrop: 'static', centered:true });
+    const modalRef = this.modalService.open(ProductCrudComponent, { backdrop: 'static', centered: true });
     modalRef.componentInstance.product = product;
     let subs: Subscription = modalRef.componentInstance.passEntry.subscribe((updatedProduct: Product) => {
       this.http.put<Product>(env.baseUrl + '/products', updatedProduct, {
@@ -95,7 +97,8 @@ export class AppComponent implements OnInit {
         product.description = updatedProduct.description;
         product.stock = updatedProduct.stock;
         this.dataSource._updateChangeSubscription();
-      })
+      },
+        error => this.snackbarService.openErrorMessage(error.error.message + ' (status code: ' + error.status + ')'));
       subs.unsubscribe();
       modalRef.close();
 
@@ -103,17 +106,23 @@ export class AppComponent implements OnInit {
   }
 
   delete(product: Product) {
-    this.http.delete<Product>(env.baseUrl + '/products/' + product.id).subscribe(resp => {
-      console.log(resp);
-      this.snackbarService.openSuccesMessage('Producto eliminado con éxito.');
-      let index = this.dataSource.data.findIndex(elem => elem.id == product.id);
-      this.dataSource.data.splice(index, 1);
-      this.dataSource._updateChangeSubscription();
+    const modalRef = this.modalService.open(ConfirmationDialogComponent, { centered: true, size: 'sm' });
+    modalRef.result.then((confirmed) => {
+      if (confirmed) {
+        this.http.delete<Product>(env.baseUrl + '/products/' + product.id).subscribe(resp => {
+          console.log(resp);
+          this.snackbarService.openSuccesMessage('Producto eliminado con éxito.');
+          let index = this.dataSource.data.findIndex(elem => elem.id == product.id);
+          this.dataSource.data.splice(index, 1);
+          this.dataSource._updateChangeSubscription();
+        })
+      }
     })
+      .catch(() => { });
   }
 
   increase(product: Product) {
-    const modalRef = this.modalService.open(IncDecStockComponent, { backdrop: 'static', centered:true });
+    const modalRef = this.modalService.open(IncDecStockComponent, { backdrop: 'static', centered: true });
     modalRef.componentInstance.inc = true;
     let subs: Subscription = modalRef.componentInstance.passEntry.subscribe((output: any) => {
       this.http.put<Product>(env.baseUrl + '/products/' + product.id + '/increase/' + output.incDecValue, {}, {
@@ -125,14 +134,15 @@ export class AppComponent implements OnInit {
         product.description = resp.body.description;
         product.stock = resp.body.stock;
         this.dataSource._updateChangeSubscription();
-      })
+      },
+        error => console.log(error));
       subs.unsubscribe();
       modalRef.close();
     })
   }
 
   decrease(product: Product) {
-    const modalRef = this.modalService.open(IncDecStockComponent, { backdrop: 'static', centered:true });
+    const modalRef = this.modalService.open(IncDecStockComponent, { backdrop: 'static', centered: true });
     modalRef.componentInstance.inc = false;
     let subs: Subscription = modalRef.componentInstance.passEntry.subscribe((output: any) => {
       this.http.put<Product>(env.baseUrl + '/products/' + product.id + '/decrease/' + output.incDecValue, {}, {
@@ -144,7 +154,8 @@ export class AppComponent implements OnInit {
         product.description = resp.body.description;
         product.stock = resp.body.stock;
         this.dataSource._updateChangeSubscription();
-      })
+      },
+        error => console.log(error));
       subs.unsubscribe();
       modalRef.close();
     })

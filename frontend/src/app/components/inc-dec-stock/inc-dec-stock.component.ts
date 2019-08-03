@@ -32,7 +32,7 @@ export class IncDecStockComponent implements OnInit {
     this.title = (this.inc) ? 'Incrementar' : 'Decrementar';
     this.placeholder = (this.inc) ? 'Valor a incrementar' : 'Valor a decrementar';
     this.incDecForm = this.fb.group({
-      incDecValue: ['', [Validators.required]],
+      incDecValue: [1, [Validators.required, Validators.min(1)]],
     });
   }
 
